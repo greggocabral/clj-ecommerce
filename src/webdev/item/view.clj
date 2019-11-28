@@ -113,8 +113,8 @@
                 [:h2 "Your Information"]
                 [:div.row
                  [:div.col-sm-12
-                  [:form
-                   {:method "POST" :action "/pay"}
+                  [:form#paymentForm
+                   {:method "POST" :action "/checkout/pay"}
                    [:input {:type :hidden
                             :name "id"
                             :value (:id item)}]
@@ -142,10 +142,21 @@
                        :name "address"
                        :required true
                        :placeholder "W836 Mulberry Street, Kalispell, MT 59901"}]]]
-                   [:input.btn.btn-primary
-                    {:type :submit
-                     :value "Pay"}]]]]]]]
-    (wu/base-page "Remerify - Checkout" body)))
+                   [:div.form-group.row
+                    [:label.col-sm-2.col-form-label {:for "address"} "Cardholder Name"]
+                    [:div.col-sm-10
+                     [:input#cardholder-name.form-control-plaintext
+                      {:type "text"
+                       :name "cardholder-name"
+                       :required true
+                       :placeholder "John Doe"}]]]
+                   [:div.form-group.row
+                    [:label.col-sm-2.col-form-label {:for "address"} "Card information"]
+                    [:div.col-sm-10
+                     [:div#card-element "<!-- placeholder for Elements -->"]]]
+                   [:button.btn.btn-primary {:id "card-button"}
+                    "Submit Payment"]]]]]]]
+    (wu/base-page "Remerify - Checkout" body :checkout)))
 
 (defn payment-success-page [item name address]
   (let [body  [:div
@@ -164,7 +175,7 @@
                 [:p (format "It will be soon delivered to %s." address)]]]]
     (wu/base-page "Remerify - Thank you" body)))
 
-(defn payment-error-page [item]
+(defn payment-error-page [error item]
   (let [body  [:div
                [:div.container.mb-3
                 [:nav
@@ -172,10 +183,14 @@
                  [:ol.breadcrumb
                   [:li.breadcrumb-item [:a {:href "/"} "Home"]]
                   [:li.breadcrumb-item [:a {:href "/items"} "All t-shirts"]]
-                  [:li.breadcrumb-item [:a {:href (format "/items/%s" (:id item))} (:name item)]]
+                  (when item
+                    [:li.breadcrumb-item [:a {:href (format "/items/%s" (:id item))} (:name item)]])
                   [:li.breadcrumb-item.active {:aria-current "page"} "Error"]]]]
                [:div.container.mb-3
                 [:h1 "There was a problem with your purchase"]]
                [:div.container.mb-3
-                [:p "Please " [:a {:href (format "/checkout/%s" (:id item))} "try again"]]]]]
+                [:p (str "The following error ocurred during payment: " error)]]
+               (when item
+                 [:div.container.mb-3
+                  [:p "Please " [:a {:href (format "/checkout/%s" (:id item))} "try again"]]])]]
     (wu/base-page "Remerify - Checkout" body)))

@@ -69,3 +69,16 @@
                WHERE id = ?"
               (dec stock)
               id]))))))
+
+(defn increase-item-stock! [db id]
+  (db/with-db-transaction [txn db]
+    (let [item (read-item-by-id txn id)
+          stock (:stock item)]
+      (= [1]
+         (db/execute!
+           txn
+           ["UPDATE items
+             SET stock = ?
+             WHERE id = ?"
+            (inc stock)
+            id])))))

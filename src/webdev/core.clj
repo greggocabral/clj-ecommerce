@@ -1,8 +1,8 @@
 (ns webdev.core
   (:require [webdev.item.model :as items]
             [webdev.item.handler :as items-handler]
-            [webdev.web-utils :as wu])
-  (:require [ring.adapter.jetty :as jetty]
+            [webdev.web-utils :as wu]
+            [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.resource :refer [wrap-resource]]
@@ -24,7 +24,7 @@
                  [:p
                   [:a {:href "/items"}
                    "See all our t-shirts"]]]]]
-        page (wu/base-page "Tasks - Home" body)]
+        page (wu/base-page "Remerify - Home" body)]
     {:status 200 :body page :headers {}}))
 
 (defn resource-not-found-page [req]
@@ -34,7 +34,7 @@
                [:h1 "Resource not found"]
                [:a {:href "/"}
                 "Go home"]]]]]
-   (wu/base-page "Tasks - Not found" body)))
+   (wu/base-page "Remerify - Not found" body)))
 
 (defroutes routes
   (GET "/" [] index-page)
@@ -43,7 +43,7 @@
   (GET "/items/:item-id" [] items-handler/handle-details-item)
   (GET "/checkout/:item-id" [] items-handler/handle-checkout-item)
 
-  (POST "/pay" [] items-handler/handle-pay!)
+  (POST "/checkout/pay" [] items-handler/handle-pay!)
 
   (not-found resource-not-found-page))
 

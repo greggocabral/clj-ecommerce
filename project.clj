@@ -8,7 +8,9 @@
                  [compojure "1.6.1"]
                  [org.clojure/java.jdbc "0.5.8"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
-                 [hiccup "1.0.5"]]
+                 [hiccup "1.0.5"]
+                 [clj-http "3.10.0"]
+                 [cheshire "5.9.0"]]
 
   :min-lein-version "2.0.0"
 
